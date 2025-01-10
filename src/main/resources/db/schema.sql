@@ -1,0 +1,10 @@
+CREATE SEQUENCE IF NOT EXISTS users_id_seq AS BIGINT START WITH 1;
+
+CREATE TABLE IF NOT EXISTS users
+(
+    id       BIGINT DEFAULT NEXT VALUE FOR users_id_seq NOT NULL PRIMARY KEY,
+    login    VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role     VARCHAR(255) NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS index_users_on_login ON users (login);
