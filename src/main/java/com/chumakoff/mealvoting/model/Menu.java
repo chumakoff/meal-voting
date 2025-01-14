@@ -1,9 +1,7 @@
 package com.chumakoff.mealvoting.model;
 
 import com.chumakoff.mealvoting.utils.MenuDishesAttributeConverter;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@NamedEntityGraph(name = "Menu.withRestaurant", attributeNodes = @NamedAttributeNode("restaurant"))
 public class Menu extends BaseEntity {
     @NotNull
     private LocalDate date;
