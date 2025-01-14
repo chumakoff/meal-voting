@@ -19,13 +19,6 @@ import java.util.List;
 public class MenusController {
     private final MenuRepository repository;
 
-    @GetMapping("/{id}")
-    public MenuResponseDTO get(@PathVariable("id") Long id) {
-        var menu = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return MenuResponseDTO.buildFromEntity(menu);
-
-    }
-
     @GetMapping
     public List<MenuResponseDTO> list(@RequestParam("date") @Nullable LocalDate date) {
         var sort = Sort.by(Sort.Direction.ASC, "id");
@@ -36,7 +29,12 @@ public class MenusController {
         } else {
             menus = repository.findAllByDate(date, sort);
         }
-
         return menus.stream().map(MenuResponseDTO::buildFromEntity).toList();
+    }
+
+    @GetMapping("/{id}")
+    public MenuResponseDTO get(@PathVariable("id") Long id) {
+        var menu = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return MenuResponseDTO.buildFromEntity(menu);
     }
 }
