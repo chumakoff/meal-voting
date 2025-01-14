@@ -1,4 +1,38 @@
 package com.chumakoff.mealvoting.model;
 
-public class Menu {
+import com.chumakoff.mealvoting.utils.MenuDishesAttributeConverter;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+public class Menu extends BaseEntity {
+    @NotNull
+    private LocalDate date;
+
+    @NotNull
+    @ManyToOne
+    private Restaurant restaurant;
+
+    @NotEmpty
+    @Convert(converter = MenuDishesAttributeConverter.class)
+    private List<Dish> dishes;
+
+    public Menu(@NotNull LocalDate date, @NotNull Restaurant restaurant, @NotEmpty List<Dish> dishes) {
+        super();
+        this.date = date;
+        this.restaurant = restaurant;
+        this.dishes = dishes;
+    }
 }

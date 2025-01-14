@@ -16,8 +16,8 @@ public class User extends BaseEntity {
     @NonNull
     private String login;
 
-    @Enumerated(EnumType.STRING)
     @NonNull
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @NonNull
