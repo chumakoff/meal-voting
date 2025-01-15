@@ -1,5 +1,6 @@
 package com.chumakoff.mealvoting.config;
 
+import com.chumakoff.mealvoting.config.security.AuthUser;
 import com.chumakoff.mealvoting.model.User;
 import com.chumakoff.mealvoting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Configuration
@@ -36,6 +36,10 @@ public class SecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(frameOptionsConfig -> {
+                    frameOptionsConfig.disable();
+                    frameOptionsConfig.sameOrigin();
+                }))
                 .build();
     }
 
@@ -45,11 +49,7 @@ public class SecurityConfig {
             Optional<User> optionalUser = userRepository.findByLoginIgnoreCase(login);
             User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + login));
 
-            return new org.springframework.security.core.userdetails.User(
-                    user.getLogin(),
-                    user.getPassword(),
-                    Collections.singletonList(user.getRole())
-            );
+            return new AuthUser(user);
         };
     }
 
