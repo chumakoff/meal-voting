@@ -14,8 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-@RestController(value = "AdminMenusController")
-@RequestMapping(value = "/api/admin/menus")
+@RestController("AdminMenusController")
+@RequestMapping("/api/admin/menus")
 @RequiredArgsConstructor
 public class MenusController {
     private final MenuRepository menuRepository;

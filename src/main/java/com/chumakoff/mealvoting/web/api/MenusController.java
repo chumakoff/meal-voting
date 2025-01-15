@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/menus")
+@RequestMapping("/api/menus")
 @RequiredArgsConstructor
 public class MenusController {
     private final MenuRepository repository;
@@ -34,7 +34,7 @@ public class MenusController {
 
     @GetMapping("/{id}")
     public MenuResponseDTO get(@PathVariable("id") Long id) {
-        var menu = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Menu menu = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return MenuResponseDTO.buildFromEntity(menu);
     }
 }
