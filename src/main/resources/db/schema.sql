@@ -21,13 +21,13 @@ CREATE TABLE IF NOT EXISTS restaurant
 CREATE SEQUENCE IF NOT EXISTS menu_id_seq AS BIGINT START WITH 1;
 CREATE TABLE IF NOT EXISTS menu (
     id            BIGINT DEFAULT NEXT VALUE FOR menu_id_seq NOT NULL PRIMARY KEY,
-    menu_id BIGINT NOT NULL,
+    restaurant_id BIGINT NOT NULL,
     date          DATE NOT NULL,
     dishes        VARCHAR(1000) NOT NULL,
-    FOREIGN KEY (menu_id) REFERENCES restaurant ON DELETE CASCADE
+    FOREIGN KEY (restaurant_id) REFERENCES restaurant ON DELETE CASCADE
 );
-CREATE INDEX IF NOT EXISTS index_menu_on_restaurant_id ON menu (menu_id);
-CREATE UNIQUE INDEX IF NOT EXISTS index_menu_on_restaurant_id_and_date ON menu (date, menu_id);
+CREATE INDEX IF NOT EXISTS index_menu_on_date ON menu (date);
+CREATE UNIQUE INDEX IF NOT EXISTS index_menu_on_restaurant_id_and_date ON menu (restaurant_id, date);
 
 -- Vote
 CREATE SEQUENCE IF NOT EXISTS vote_id_seq AS BIGINT START WITH 1;
@@ -39,4 +39,5 @@ CREATE TABLE IF NOT EXISTS vote (
     FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE,
     FOREIGN KEY (restaurant_id) REFERENCES menu ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX IF NOT EXISTS index_vote_on_menu_id_and_user_id ON vote (user_id, meal_date);
+CREATE UNIQUE INDEX IF NOT EXISTS index_vote_on_user_id_and_meal_date ON vote (user_id, meal_date);
+CREATE INDEX IF NOT EXISTS index_vote_on_meal_date ON vote (meal_date);
