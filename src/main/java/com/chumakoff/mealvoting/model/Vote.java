@@ -1,6 +1,7 @@
 package com.chumakoff.mealvoting.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.validation.constraints.NotNull;
@@ -16,16 +17,15 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "Vote.withAllAssociations", includeAllAttributes = true)
 public class Vote extends BaseEntity {
     @NotNull
     private LocalDate mealDate;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
 }

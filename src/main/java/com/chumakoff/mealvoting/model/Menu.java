@@ -21,7 +21,7 @@ public class Menu extends BaseEntity {
     private LocalDate date;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
     @NotEmpty

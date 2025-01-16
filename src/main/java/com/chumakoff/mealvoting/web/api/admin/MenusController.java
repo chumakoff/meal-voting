@@ -28,7 +28,8 @@ public class MenusController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new daily lunch menu for a restaurant.")
     public MenuResponseDTO create(@Valid @RequestBody MenuCreateDTO dto) {
-        Restaurant restaurant = restaurantRepository.getReferenceById(dto.restaurantId());
+        // TODO exception
+        Restaurant restaurant = restaurantRepository.findById(dto.restaurantId()).orElseThrow();
         Menu menu = menuRepository.save(new Menu(dto.date(), restaurant, dto.dishes()));
         return MenuResponseDTO.buildFromEntity(menu);
     }
