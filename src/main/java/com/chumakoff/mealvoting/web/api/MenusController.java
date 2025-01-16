@@ -25,7 +25,7 @@ public class MenusController {
 
     @GetMapping
     @Operation(summary = "Get restaurant daily lunch menus.",
-            description = "Menus also include a restaurant information.")
+            description = "Menus also include a restaurant information and can be filtered by date.")
     public List<MenuResponseDTO> list(
             @RequestParam("date")
             @Nullable

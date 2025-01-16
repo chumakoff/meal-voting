@@ -1,17 +1,16 @@
 package com.chumakoff.mealvoting.web.api;
 
 import com.chumakoff.mealvoting.config.security.AuthUser;
+import com.chumakoff.mealvoting.dto.VoteCreateDTO;
 import com.chumakoff.mealvoting.dto.VoteResponseDTO;
 import com.chumakoff.mealvoting.model.Vote;
 import com.chumakoff.mealvoting.repository.VoteRepository;
 import com.chumakoff.mealvoting.service.VoteService;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -50,10 +50,7 @@ public class VotesController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new vote for an authenticated user.", description = "A vote is counted for the current day.")
     public VoteResponseDTO create(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody VoteCreateDTO dto) {
-        Vote vote = voteService.registerVote(authUser.getUserId(), dto.restaurantId());
+        Vote vote = voteService.registerVote(authUser.getUserId(), dto.restaurantId(), Instant.now());
         return VoteResponseDTO.buildFromEntity(vote);
-    }
-
-    private record VoteCreateDTO(@NotNull @JsonProperty("restaurant_id") Long restaurantId) {
     }
 }

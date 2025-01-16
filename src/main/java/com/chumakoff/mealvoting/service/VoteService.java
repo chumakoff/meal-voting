@@ -42,11 +42,9 @@ public class VoteService {
         }
     }
 
-    public Vote registerVote(Long userId, Long restaurantId) {
+    public Vote registerVote(Long userId, Long restaurantId, Instant currentTime) {
         // TODO change exception
         var user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        var currentTime = Instant.now();
         var currentDate = LocalDate.ofInstant(currentTime, ZoneId.systemDefault());
         Optional<Vote> existingVote = voteRepository.findByUserIdAndMealDate(user.getId(), currentDate);
 
