@@ -1,6 +1,7 @@
 package com.chumakoff.mealvoting.web.api;
 
 import com.chumakoff.mealvoting.dto.MenuResponseDTO;
+import com.chumakoff.mealvoting.exception.RecordNotFoundException;
 import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.repository.MenuRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,9 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,7 +45,7 @@ public class MenusController {
     @GetMapping("/{id}")
     @Operation(summary = "Get a lunch menu by ID.")
     public MenuResponseDTO get(@PathVariable("id") Long id) {
-        Menu menu = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Menu menu = repository.findById(id).orElseThrow(() -> new RecordNotFoundException(id, Menu.class));
         return MenuResponseDTO.buildFromEntity(menu);
     }
 }

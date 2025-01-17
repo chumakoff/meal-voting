@@ -20,8 +20,7 @@ import java.util.List;
 import static com.chumakoff.mealvoting.test_support.web.api.TestDBData.AUTH_USER_LOGIN;
 import static com.chumakoff.mealvoting.test_support.web.api.TestDBData.TEST_RESTAURANT_ID;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class VotesControllerTest extends ApiControllerTest {
     @Autowired
@@ -116,5 +115,15 @@ class VotesControllerTest extends ApiControllerTest {
         assertEquals(responseVote.mealDate(), LocalDate.now());
         assertEquals(responseVote.restaurantId(), requestDto.restaurantId());
         assertEquals(responseVote.userId(), userRepository.findByLoginIgnoreCase(AUTH_USER_LOGIN).map(User::getId).orElseThrow());
+    }
+
+    @Test
+    @WithUserDetails(value = AUTH_USER_LOGIN)
+    void create__withNonexistentRestaurant() throws Exception {
+        VoteCreateDTO requestDto = new VoteCreateDTO(99999L);
+        perform(postRequest("/api/votes").content(buildJSON(requestDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Could not find Restaurant with id=99999"));
     }
 }

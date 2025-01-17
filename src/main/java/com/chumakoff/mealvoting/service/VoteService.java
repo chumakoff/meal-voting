@@ -1,5 +1,7 @@
 package com.chumakoff.mealvoting.service;
 
+import com.chumakoff.mealvoting.config.exception.ApiErrorException;
+import com.chumakoff.mealvoting.exception.RecordNotFoundException;
 import com.chumakoff.mealvoting.model.Restaurant;
 import com.chumakoff.mealvoting.model.User;
 import com.chumakoff.mealvoting.model.Vote;
@@ -9,7 +11,6 @@ import com.chumakoff.mealvoting.repository.VoteRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -20,9 +21,11 @@ import java.util.Optional;
 
 @Service
 public class VoteService {
-    final private VoteRepository voteRepository;
-    final private RestaurantRepository restaurantRepository;
-    final private UserRepository userRepository;
+    private final static LocalTime VOTING_END_TIME = LocalTime.of(11, 0);
+
+    private final VoteRepository voteRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final UserRepository userRepository;
 
     public VoteService(VoteRepository voteRepository, RestaurantRepository restaurantRepository, UserRepository userRepository) {
         this.voteRepository = voteRepository;
@@ -43,17 +46,16 @@ public class VoteService {
     }
 
     public Vote registerVote(Long userId, Long restaurantId, Instant currentTime) {
-        // TODO change exception
-        var user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        var user = userRepository.findById(userId).orElseThrow(() -> new RecordNotFoundException(userId, User.class));
         var currentDate = LocalDate.ofInstant(currentTime, ZoneId.systemDefault());
         Optional<Vote> existingVote = voteRepository.findByUserIdAndMealDate(user.getId(), currentDate);
 
         if (existingVote.isPresent() && !canRevote(currentTime)) {
-            throw new RuntimeException("It is too late, vote can't be changed");
+            throw new ApiErrorException(HttpStatus.FORBIDDEN, "It is too late, vote can't be changed");
         }
 
-        // TODO change exception
-        var restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
+        var restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RecordNotFoundException(restaurantId, Restaurant.class));
 
         return existingVote.map(vote -> updateVote(vote, restaurant))
                 .orElseGet(() -> createVote(user, restaurant, currentDate));
@@ -75,6 +77,6 @@ public class VoteService {
 
     private boolean canRevote(Instant time) {
         var currentLocalTime = LocalTime.ofInstant(time, ZoneId.systemDefault());
-        return currentLocalTime.isBefore(LocalTime.of(11, 0));
+        return currentLocalTime.isBefore(VOTING_END_TIME);
     }
 }

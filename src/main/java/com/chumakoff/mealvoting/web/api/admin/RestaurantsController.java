@@ -3,6 +3,7 @@ package com.chumakoff.mealvoting.web.api.admin;
 import com.chumakoff.mealvoting.dto.RestaurantCreateDTO;
 import com.chumakoff.mealvoting.dto.RestaurantResponseDTO;
 import com.chumakoff.mealvoting.dto.RestaurantUpdateDTO;
+import com.chumakoff.mealvoting.exception.RecordNotFoundException;
 import com.chumakoff.mealvoting.model.Restaurant;
 import com.chumakoff.mealvoting.repository.RestaurantRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class RestaurantsController {
     @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Update a restaurant.")
     public RestaurantResponseDTO update(@PathVariable("id") Long id, @Valid @RequestBody RestaurantUpdateDTO dto) {
-        Restaurant restaurant = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Restaurant restaurant = repository.findById(id).orElseThrow(() -> new RecordNotFoundException(id, Restaurant.class));
         restaurant.setName(dto.name());
 
         Restaurant updatedRestaurant = repository.save(restaurant);

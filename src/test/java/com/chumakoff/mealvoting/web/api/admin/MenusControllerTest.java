@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.chumakoff.mealvoting.test_support.web.api.TestDBData.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class MenusControllerTest extends ApiControllerTest {
@@ -49,8 +50,20 @@ class MenusControllerTest extends ApiControllerTest {
 
     @Test
     @WithUserDetails(value = AUTH_ADMIN_LOGIN)
-    void create__invalid() throws Exception {
-        // TODO
+    void create__withNonexistentRestaurant() throws Exception {
+        MenuCreateDTO createDto = new MenuCreateDTO(99999L, menuCreateDto.date(), menuCreateDto.dishes());
+        perform(postRequest("/api/admin/menus").content(buildJSON(createDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Could not find Restaurant with id=99999"));
+    }
+
+    @Test
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
+    void create__invalidDate() throws Exception {
+        MenuCreateDTO createDto = new MenuCreateDTO(menuCreateDto.restaurantId(), null, menuCreateDto.dishes());
+        perform(postRequest("/api/admin/menus").content(buildJSON(createDto)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.message").value("[date] must not be null"));
     }
 
     @Test

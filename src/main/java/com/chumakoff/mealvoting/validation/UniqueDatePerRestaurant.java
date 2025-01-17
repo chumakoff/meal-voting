@@ -10,12 +10,12 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ElementType.FIELD})
+@Target({ElementType.TYPE})
 @Retention(RUNTIME)
 @Documented
-@Constraint(validatedBy = NullOrNotEmptyValidator.class)
-public @interface NullOrNotEmpty {
-    String message() default "{validation.NullOrNotEmpty.message}";
+@Constraint(validatedBy = UniqueDatePerRestaurantValidator.class)
+public @interface UniqueDatePerRestaurant {
+    String message() default "{validation.UniqueDatePerRestaurant.message}";
 
     Class<?>[] groups() default {};
 

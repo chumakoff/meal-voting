@@ -10,12 +10,12 @@ import java.util.List;
 
 @Converter
 public class MenuDishesAttributeConverter implements AttributeConverter<List<Dish>, String> {
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
     public String convertToDatabaseColumn(List<Dish> dishes) {
         try {
-            return mapper.writeValueAsString(dishes);
+            return MAPPER.writeValueAsString(dishes);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -24,7 +24,7 @@ public class MenuDishesAttributeConverter implements AttributeConverter<List<Dis
     @Override
     public List<Dish> convertToEntityAttribute(String json) {
         try {
-            return mapper.readerForListOf(Dish.class).readValue(json);
+            return MAPPER.readerForListOf(Dish.class).readValue(json);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

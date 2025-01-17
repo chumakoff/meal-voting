@@ -20,4 +20,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 
     @EntityGraph("Menu.withRestaurant")
     List<Menu> findAllByDate(LocalDate date, Sort sort);
+
+    boolean existsByDateAndRestaurantId(LocalDate date, Long restaurantId);
 }

@@ -16,8 +16,7 @@ import java.util.List;
 
 import static com.chumakoff.mealvoting.test_support.web.api.TestDBData.AUTH_USER_LOGIN;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class MenusControllerTest extends ApiControllerTest {
     @Autowired
@@ -68,4 +67,15 @@ class MenusControllerTest extends ApiControllerTest {
         Menu menu = menuRepository.findById(menuId).orElseThrow();
         assertEquals(responseMenu, MenuResponseDTO.buildFromEntity(menu));
     }
+
+    @Test
+    @WithUserDetails(value = AUTH_USER_LOGIN)
+    void get__nonexistent() throws Exception {
+        performGetRequest("/api/menus/99999")
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Could not find Menu with id=99999"));
+    }
 }
+
+
