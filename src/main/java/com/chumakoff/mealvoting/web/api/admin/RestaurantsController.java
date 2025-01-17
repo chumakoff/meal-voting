@@ -31,13 +31,6 @@ public class RestaurantsController {
                 .stream().map(RestaurantResponseDTO::buildFromEntity).toList();
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get a restaurant by ID.")
-    public RestaurantResponseDTO get(@PathVariable("id") Long id) {
-        var restaurant = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return RestaurantResponseDTO.buildFromEntity(restaurant);
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new restaurant.")

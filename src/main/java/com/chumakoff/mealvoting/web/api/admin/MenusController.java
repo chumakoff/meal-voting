@@ -7,6 +7,7 @@ import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.model.Restaurant;
 import com.chumakoff.mealvoting.repository.MenuRepository;
 import com.chumakoff.mealvoting.repository.RestaurantRepository;
+import com.chumakoff.mealvoting.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController("AdminMenusController")
 @RequestMapping("/api/admin/menus")
@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class MenusController {
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;
+    private final MenuService menuService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -37,11 +38,7 @@ public class MenusController {
     @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Update a lunch menu.")
     public MenuResponseDTO update(@PathVariable("id") Long id, @Valid @RequestBody MenuUpdateDTO dto) {
-        Menu menu = menuRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (dto.date() != null) menu.setDate(dto.date());
-        if (dto.dishes() != null) menu.setDishes(dto.dishes());
-
-        Menu updatedMenu = menuRepository.save(menu);
+        Menu updatedMenu = menuService.update(id, dto);
         return MenuResponseDTO.buildFromEntity(updatedMenu);
     }
 
