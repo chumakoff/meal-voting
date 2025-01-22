@@ -25,10 +25,16 @@ import java.util.Optional;
 public class SecurityConfig {
     private final UserRepository userRepository;
 
+    private static final String[] WHITE_LIST = {
+            "/api/swagger-ui/**",
+            "/api/docs/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         return security.authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("api/admin/**").hasRole("ADMIN")
+                                .requestMatchers(WHITE_LIST).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement((session) ->

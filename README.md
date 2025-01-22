@@ -2,8 +2,8 @@
 
 ## API Docs
 ### Swagger
-- http://localhost:8080/swagger-ui/index.html
-- http://localhost:8080/v3/api-docs
+- http://localhost:8080/api/swagger-ui
+- http://localhost:8080/api/docs
 
 **Creds:**
 * Admin: admin/111111
