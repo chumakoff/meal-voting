@@ -22,12 +22,12 @@ CREATE SEQUENCE IF NOT EXISTS menu_id_seq AS BIGINT START WITH 1;
 CREATE TABLE IF NOT EXISTS menu (
     id            BIGINT DEFAULT NEXT VALUE FOR menu_id_seq NOT NULL PRIMARY KEY,
     restaurant_id BIGINT NOT NULL,
-    date          DATE NOT NULL,
+    menu_date     DATE NOT NULL,
     dishes        JSON NOT NULL,
     FOREIGN KEY (restaurant_id) REFERENCES restaurant ON DELETE CASCADE
 );
-CREATE INDEX IF NOT EXISTS index_menu_on_date ON menu (date);
-CREATE UNIQUE INDEX IF NOT EXISTS index_menu_on_restaurant_id_and_date ON menu (restaurant_id, date);
+CREATE INDEX IF NOT EXISTS index_menu_on_date ON menu (menu_date);
+CREATE UNIQUE INDEX IF NOT EXISTS index_menu_on_restaurant_id_and_date ON menu (restaurant_id, menu_date);
 
 -- Vote
 CREATE SEQUENCE IF NOT EXISTS vote_id_seq AS BIGINT START WITH 1;

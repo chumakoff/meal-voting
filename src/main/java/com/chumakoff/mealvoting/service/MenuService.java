@@ -16,7 +16,7 @@ public class MenuService {
     @Transactional
     public Menu update(Long menuId, MenuUpdateDTO dto) {
         Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new RecordNotFoundException(menuId, Menu.class));
-        if (dto.date() != null) menu.setDate(dto.date());
+        if (dto.menuDate() != null) menu.setMenuDate(dto.menuDate());
         if (dto.dishes() != null) menu.setDishes(dto.dishes());
 
         return menuRepository.save(menu);

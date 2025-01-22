@@ -49,7 +49,7 @@ class MenusControllerTest extends ApiControllerTest {
         assertFalse(responseMenus.isEmpty());
 
         List<Menu> allMenus = menuRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
-        List<MenuResponseDTO> expectedMenus = allMenus.stream().filter(m -> m.getDate().equals(today))
+        List<MenuResponseDTO> expectedMenus = allMenus.stream().filter(m -> m.getMenuDate().equals(today))
                 .map(MenuResponseDTO::buildFromEntity).toList();
         assertNotEquals(allMenus.size(), expectedMenus.size());
         assertIterableEquals(responseMenus, expectedMenus);

@@ -33,7 +33,7 @@ public class MenusController {
         // TODO exception
         Restaurant restaurant = restaurantRepository.findById(dto.restaurantId())
                 .orElseThrow(() -> new RecordNotFoundException(dto.restaurantId(), Restaurant.class));
-        Menu menu = menuRepository.save(new Menu(dto.date(), restaurant, dto.dishes()));
+        Menu menu = menuRepository.save(new Menu(dto.menuDate(), restaurant, dto.dishes()));
         return MenuResponseDTO.buildFromEntity(menu);
     }
 

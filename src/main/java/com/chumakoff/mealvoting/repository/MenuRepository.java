@@ -19,7 +19,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     List<Menu> findAll(Sort sort);
 
     @EntityGraph("Menu.withRestaurant")
-    List<Menu> findAllByDate(LocalDate date, Sort sort);
+    List<Menu> findAllByMenuDate(LocalDate date, Sort sort);
 
-    boolean existsByDateAndRestaurantId(LocalDate date, Long restaurantId);
+    boolean existsByMenuDateAndRestaurantId(LocalDate date, Long restaurantId);
 }

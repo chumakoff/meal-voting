@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record MenuUpdateDTO(
-        LocalDate date,
+        LocalDate menuDate,
         @NullOrNotEmpty List<Dish> dishes
 ) {
 }

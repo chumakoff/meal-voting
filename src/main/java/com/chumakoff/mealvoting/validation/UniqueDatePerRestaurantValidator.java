@@ -18,15 +18,15 @@ public class UniqueDatePerRestaurantValidator implements ConstraintValidator<Uni
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext context) {
-        Object date = new BeanWrapperImpl(o).getPropertyValue("date");
+        Object date = new BeanWrapperImpl(o).getPropertyValue("menuDate");
         Object restaurantId = new BeanWrapperImpl(o).getPropertyValue("restaurantId");
 
-        if (!menuRepository.existsByDateAndRestaurantId((LocalDate) date, (Long) restaurantId)) {
+        if (!menuRepository.existsByMenuDateAndRestaurantId((LocalDate) date, (Long) restaurantId)) {
             return true;
         }
 
         context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
-                .addPropertyNode("date").addConstraintViolation();
+                .addPropertyNode("menuDate").addConstraintViolation();
         return false;
     }
 }

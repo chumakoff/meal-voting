@@ -37,7 +37,7 @@ public class MenusController {
         if (date == null) {
             menus = repository.findAll(sort);
         } else {
-            menus = repository.findAllByDate(date, sort);
+            menus = repository.findAllByMenuDate(date, sort);
         }
         return menus.stream().map(MenuResponseDTO::buildFromEntity).toList();
     }

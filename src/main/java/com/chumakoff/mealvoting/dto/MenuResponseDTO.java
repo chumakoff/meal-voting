@@ -8,14 +8,14 @@ import java.util.List;
 
 public record MenuResponseDTO(
         Long id,
-        LocalDate date,
+        LocalDate menuDate,
         List<Dish> dishes,
         RestaurantResponseDTO restaurant
 ) {
     public static MenuResponseDTO buildFromEntity(Menu menu) {
         return new MenuResponseDTO(
                 menu.getId(),
-                menu.getDate(),
+                menu.getMenuDate(),
                 menu.getDishes(),
                 RestaurantResponseDTO.buildFromEntity(menu.getRestaurant())
         );

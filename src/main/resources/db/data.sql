@@ -16,7 +16,7 @@ VALUES ('Старик Хинкалыч'), ('Теремок'), ('Мансарда
 -- Menu
 ALTER SEQUENCE menu_id_seq RESTART WITH 1;
 DELETE FROM menu;
-INSERT INTO menu (restaurant_id, date, dishes)
+INSERT INTO menu (restaurant_id, menu_date, dishes)
 VALUES (1, CURRENT_DATE() - 1, JSON '[{"name":"Dish 1","price":1000},{"name":"Dish 2","price":1000},{"name":"Dish 3","price":1000}]'),
        (1, CURRENT_DATE() + 1, JSON '[{"name":"Dish 1","price":1000},{"name":"Dish 2","price":1000},{"name":"Dish 3","price":1000}]'),
        (1, CURRENT_DATE(), JSON '[{"name":"Today Dish 1","price":1000},{"name":"Today Dish 2","price":1000},{"name":"Today Dish 3","price":1000}]'),

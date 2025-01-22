@@ -37,7 +37,7 @@ class MenusControllerTest extends ApiControllerTest {
                 .andExpect(status().isCreated());
         MenuResponseDTO responseMenu = parseJsonResponse(response, MenuResponseDTO.class);
         assertNotNull(responseMenu.id());
-        assertEquals(menuCreateDto.date(), responseMenu.date());
+        assertEquals(menuCreateDto.menuDate(), responseMenu.menuDate());
         assertEquals(menuCreateDto.dishes(), responseMenu.dishes());
     }
 
@@ -51,7 +51,7 @@ class MenusControllerTest extends ApiControllerTest {
     @Test
     @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void create__withNonexistentRestaurant() throws Exception {
-        MenuCreateDTO createDto = new MenuCreateDTO(99999L, menuCreateDto.date(), menuCreateDto.dishes());
+        MenuCreateDTO createDto = new MenuCreateDTO(99999L, menuCreateDto.menuDate(), menuCreateDto.dishes());
         perform(postRequest("/api/admin/menus").content(buildJSON(createDto)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Could not find Restaurant with id=99999"));
@@ -63,7 +63,7 @@ class MenusControllerTest extends ApiControllerTest {
         MenuCreateDTO createDto = new MenuCreateDTO(menuCreateDto.restaurantId(), null, menuCreateDto.dishes());
         perform(postRequest("/api/admin/menus").content(buildJSON(createDto)))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.message").value("[date] must not be null"));
+                .andExpect(jsonPath("$.message").value("[menuDate] must not be null"));
     }
 
     @Test
@@ -75,7 +75,7 @@ class MenusControllerTest extends ApiControllerTest {
         MenuResponseDTO responseMenu = parseJsonResponse(response, MenuResponseDTO.class);
 
         assertEquals(menuId, responseMenu.id());
-        assertEquals(menuUpdateDto.date(), responseMenu.date());
+        assertEquals(menuUpdateDto.menuDate(), responseMenu.menuDate());
         assertEquals(menuUpdateDto.dishes(), responseMenu.dishes());
     }
 
@@ -83,7 +83,7 @@ class MenusControllerTest extends ApiControllerTest {
     @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void update__onlyDate() throws Exception {
         Long menuId = 1L;
-        MenuUpdateDTO updateDto = new MenuUpdateDTO(menuUpdateDto.date(), null);
+        MenuUpdateDTO updateDto = new MenuUpdateDTO(menuUpdateDto.menuDate(), null);
         Menu menuBeforeUpdate = menuRepository.findById(menuId).orElseThrow();
 
         ResultActions response = perform(patchRequest("/api/admin/menus/" + menuId).content(buildJSON(updateDto)))
@@ -91,7 +91,7 @@ class MenusControllerTest extends ApiControllerTest {
         MenuResponseDTO responseMenu = parseJsonResponse(response, MenuResponseDTO.class);
 
         assertEquals(menuId, responseMenu.id());
-        assertEquals(updateDto.date(), responseMenu.date());
+        assertEquals(updateDto.menuDate(), responseMenu.menuDate());
         assertEquals(menuBeforeUpdate.getDishes(), responseMenu.dishes());
     }
 
@@ -108,7 +108,7 @@ class MenusControllerTest extends ApiControllerTest {
 
         assertEquals(menuId, responseMenu.id());
         assertEquals(updateDto.dishes(), responseMenu.dishes());
-        assertEquals(menuBeforeUpdate.getDate(), responseMenu.date());
+        assertEquals(menuBeforeUpdate.getMenuDate(), responseMenu.menuDate());
     }
 
     @Test

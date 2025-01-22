@@ -19,7 +19,7 @@ import java.util.List;
 @NamedEntityGraph(name = "Menu.withRestaurant", attributeNodes = @NamedAttributeNode("restaurant"))
 public class Menu extends BaseEntity {
     @NotNull
-    private LocalDate date;
+    private LocalDate menuDate;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,9 +29,9 @@ public class Menu extends BaseEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<Dish> dishes;
 
-    public Menu(@NotNull LocalDate date, @NotNull Restaurant restaurant, @NotEmpty List<Dish> dishes) {
+    public Menu(@NotNull LocalDate menuDate, @NotNull Restaurant restaurant, @NotEmpty List<Dish> dishes) {
         super();
-        this.date = date;
+        this.menuDate = menuDate;
         this.restaurant = restaurant;
         this.dishes = dishes;
     }
