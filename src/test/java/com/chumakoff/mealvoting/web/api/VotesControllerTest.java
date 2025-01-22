@@ -6,7 +6,7 @@ import com.chumakoff.mealvoting.model.User;
 import com.chumakoff.mealvoting.model.Vote;
 import com.chumakoff.mealvoting.repository.UserRepository;
 import com.chumakoff.mealvoting.repository.VoteRepository;
-import com.chumakoff.mealvoting.test_support.web.api.ApiControllerTest;
+import com.chumakoff.mealvoting.testsupport.web.api.ApiControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.chumakoff.mealvoting.test_support.web.api.TestDBData.AUTH_USER_LOGIN;
-import static com.chumakoff.mealvoting.test_support.web.api.TestDBData.TEST_RESTAURANT_ID;
+import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_USER_LOGIN;
+import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.TEST_RESTAURANT_ID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

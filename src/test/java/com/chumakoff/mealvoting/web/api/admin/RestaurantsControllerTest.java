@@ -4,7 +4,7 @@ import com.chumakoff.mealvoting.dto.RestaurantCreateDTO;
 import com.chumakoff.mealvoting.dto.RestaurantResponseDTO;
 import com.chumakoff.mealvoting.dto.RestaurantUpdateDTO;
 import com.chumakoff.mealvoting.repository.RestaurantRepository;
-import com.chumakoff.mealvoting.test_support.web.api.ApiControllerTest;
+import com.chumakoff.mealvoting.testsupport.web.api.ApiControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static com.chumakoff.mealvoting.test_support.web.api.TestDBData.AUTH_ADMIN_LOGIN;
+import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_ADMIN_LOGIN;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

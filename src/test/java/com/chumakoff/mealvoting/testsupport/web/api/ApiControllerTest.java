@@ -1,4 +1,4 @@
-package com.chumakoff.mealvoting.test_support.web.api;
+package com.chumakoff.mealvoting.testsupport.web.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

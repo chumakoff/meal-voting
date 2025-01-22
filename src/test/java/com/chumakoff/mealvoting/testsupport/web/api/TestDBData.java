@@ -1,4 +1,4 @@
-package com.chumakoff.mealvoting.test_support.web.api;
+package com.chumakoff.mealvoting.testsupport.web.api;
 
 public class TestDBData {
     public static final String AUTH_ADMIN_LOGIN = "admin";
