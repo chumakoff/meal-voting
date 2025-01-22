@@ -6,32 +6,36 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
+import org.hibernate.proxy.HibernateProxy;
 
 @MappedSuperclass
 @Getter
 @Setter
-public class BaseEntity implements Serializable {
+public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Override
     public boolean equals(Object o) {
-        // TODO
-        return super.equals(o);
+        if (o == null) return false;
+        if (this == o) return true;
+        if (getId() == null) return false;
+        return (getClass(this) == getClass(o)) && getId().equals(((BaseEntity) o).getId());
     }
 
     @Override
     public int hashCode() {
-        // TODO
-        return super.hashCode();
+        return getClass(this).hashCode();
     }
 
     @Override
     public String toString() {
-        // TODO
-        return super.toString();
+        return getClass().getSimpleName() + ":" + id;
+    }
+
+    private Class<?> getClass(Object object) {
+        return (object instanceof HibernateProxy proxy) ?
+                proxy.getHibernateLazyInitializer().getPersistentClass() : object.getClass();
     }
 }

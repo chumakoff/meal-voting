@@ -30,7 +30,6 @@ public class Menu extends BaseEntity {
     private List<Dish> dishes;
 
     public Menu(@NotNull LocalDate menuDate, @NotNull Restaurant restaurant, @NotEmpty List<Dish> dishes) {
-        super();
         this.menuDate = menuDate;
         this.restaurant = restaurant;
         this.dishes = dishes;

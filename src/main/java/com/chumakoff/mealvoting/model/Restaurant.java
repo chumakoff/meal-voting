@@ -16,7 +16,6 @@ public class Restaurant extends BaseEntity {
     private String name;
 
     public Restaurant(@NotNull String name) {
-        super();
         this.name = name;
     }
 }
