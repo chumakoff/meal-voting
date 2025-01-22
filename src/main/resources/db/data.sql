@@ -17,11 +17,11 @@ VALUES ('Старик Хинкалыч'), ('Теремок'), ('Мансарда
 ALTER SEQUENCE menu_id_seq RESTART WITH 1;
 DELETE FROM menu;
 INSERT INTO menu (restaurant_id, date, dishes)
-VALUES (1, CURRENT_DATE() - 1, '[{"name":"Dish 1","price":1000},{"name":"Dish 2","price":1000},{"name":"Dish 3","price":1000}]'),
-       (1, CURRENT_DATE() + 1, '[{"name":"Dish 1","price":1000},{"name":"Dish 2","price":1000},{"name":"Dish 3","price":1000}]'),
-       (1, CURRENT_DATE(), '[{"name":"Today Dish 1","price":1000},{"name":"Today Dish 2","price":1000},{"name":"Today Dish 3","price":1000}]'),
-       (2, CURRENT_DATE(), '[{"name":"Today Dish 1","price":1000},{"name":"Today Dish 2","price":1000},{"name":"Today Dish 3","price":1000}]'),
-       (3, CURRENT_DATE(), '[{"name":"Today Dish 1","price":1000},{"name":"Today Dish 2","price":1000},{"name":"Today Dish 3","price":1000}]');
+VALUES (1, CURRENT_DATE() - 1, JSON '[{"name":"Dish 1","price":1000},{"name":"Dish 2","price":1000},{"name":"Dish 3","price":1000}]'),
+       (1, CURRENT_DATE() + 1, JSON '[{"name":"Dish 1","price":1000},{"name":"Dish 2","price":1000},{"name":"Dish 3","price":1000}]'),
+       (1, CURRENT_DATE(), JSON '[{"name":"Today Dish 1","price":1000},{"name":"Today Dish 2","price":1000},{"name":"Today Dish 3","price":1000}]'),
+       (2, CURRENT_DATE(), JSON '[{"name":"Today Dish 1","price":1000},{"name":"Today Dish 2","price":1000},{"name":"Today Dish 3","price":1000}]'),
+       (3, CURRENT_DATE(), JSON '[{"name":"Today Dish 1","price":1000},{"name":"Today Dish 2","price":1000},{"name":"Today Dish 3","price":1000}]');
 
 -- Vote
 ALTER SEQUENCE vote_id_seq RESTART WITH 1;

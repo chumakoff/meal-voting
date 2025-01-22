@@ -1,12 +1,13 @@
 package com.chumakoff.mealvoting.model;
 
-import com.chumakoff.mealvoting.utils.MenuDishesAttributeConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Menu extends BaseEntity {
     private Restaurant restaurant;
 
     @NotEmpty
-    @Convert(converter = MenuDishesAttributeConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
     private List<Dish> dishes;
 
     public Menu(@NotNull LocalDate date, @NotNull Restaurant restaurant, @NotEmpty List<Dish> dishes) {

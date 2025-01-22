@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS menu (
     id            BIGINT DEFAULT NEXT VALUE FOR menu_id_seq NOT NULL PRIMARY KEY,
     restaurant_id BIGINT NOT NULL,
     date          DATE NOT NULL,
-    dishes        VARCHAR(1000) NOT NULL,
+    dishes        JSON NOT NULL,
     FOREIGN KEY (restaurant_id) REFERENCES restaurant ON DELETE CASCADE
 );
 CREATE INDEX IF NOT EXISTS index_menu_on_date ON menu (date);
