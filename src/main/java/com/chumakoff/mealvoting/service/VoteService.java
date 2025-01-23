@@ -41,7 +41,7 @@ public class VoteService {
         } else if (mealDate == null) {
             return voteRepository.findAllByUserId(userId, sort);
         } else {
-            return voteRepository.findAllByMealDateAndUserId(mealDate, userId, sort);
+            return voteRepository.findAllByUserIdAndMealDate(userId, mealDate, sort);
         }
     }
 

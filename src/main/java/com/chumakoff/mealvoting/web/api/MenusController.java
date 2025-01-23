@@ -35,9 +35,9 @@ public class MenusController {
         List<Menu> menus;
 
         if (date == null) {
-            menus = repository.findAll(sort);
+            menus = repository.findAllWithRestaurant(sort);
         } else {
-            menus = repository.findAllByMenuDate(date, sort);
+            menus = repository.findAllByMenuDateWithRestaurant(date, sort);
         }
         return menus.stream().map(MenuResponseDTO::buildFromEntity).toList();
     }
@@ -45,7 +45,7 @@ public class MenusController {
     @GetMapping("/{id}")
     @Operation(summary = "Get a lunch menu by ID.")
     public MenuResponseDTO get(@PathVariable("id") Long id) {
-        Menu menu = repository.findById(id).orElseThrow(() -> new RecordNotFoundException(id, Menu.class));
+        Menu menu = repository.findByIdWithRestaurant(id).orElseThrow(() -> new RecordNotFoundException(id, Menu.class));
         return MenuResponseDTO.buildFromEntity(menu);
     }
 }

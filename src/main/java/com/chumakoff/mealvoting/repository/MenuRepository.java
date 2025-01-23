@@ -4,22 +4,24 @@ import com.chumakoff.mealvoting.model.Menu;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
-    @Override
+    @Query("SELECT m FROM Menu m WHERE m.id=:id")
     @EntityGraph("Menu.withRestaurant")
-    Optional<Menu> findById(Long id);
+    Optional<Menu> findByIdWithRestaurant(Long id);
 
-    @Override
+    @Query("SELECT m FROM Menu m")
     @EntityGraph("Menu.withRestaurant")
-    List<Menu> findAll(Sort sort);
+    List<Menu> findAllWithRestaurant(Sort sort);
 
+    @Query("SELECT m FROM Menu m WHERE m.menuDate=:date")
     @EntityGraph("Menu.withRestaurant")
-    List<Menu> findAllByMenuDate(LocalDate date, Sort sort);
+    List<Menu> findAllByMenuDateWithRestaurant(LocalDate date, Sort sort);
 
     boolean existsByMenuDateAndRestaurantId(LocalDate date, Long restaurantId);
 }
