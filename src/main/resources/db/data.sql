@@ -11,7 +11,7 @@ VALUES ('admin', '$2a$10$n7XwQKXbba5XWv91/7O61OXY2TW3IUPvAtVo7GZVWQgLXQncxXSsC',
 ALTER SEQUENCE restaurant_id_seq RESTART WITH 1;
 DELETE FROM restaurant;
 INSERT INTO restaurant (name)
-VALUES ('Старик Хинкалыч'), ('Теремок'), ('Мансарда'), ('TERRASSA');
+VALUES ('Старик Хинкалыч'), ('Теремок'), ('Мансарда'), ('TERRASSA'), ('Failover Bar');
 
 -- Menu
 ALTER SEQUENCE menu_id_seq RESTART WITH 1;

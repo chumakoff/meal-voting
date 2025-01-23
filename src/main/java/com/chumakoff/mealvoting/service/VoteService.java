@@ -10,11 +10,11 @@ import com.chumakoff.mealvoting.repository.VoteRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ import static com.chumakoff.mealvoting.helper.RepositoryHelper.getOrThrow;
 
 @Service
 public class VoteService {
-    private final static LocalTime VOTING_END_TIME = LocalTime.of(11, 0);
+    public final static LocalTime VOTING_END_TIME = LocalTime.of(11, 0);
 
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
@@ -46,9 +46,10 @@ public class VoteService {
         }
     }
 
-    public Vote registerVote(Long userId, Long restaurantId, Instant currentTime) {
+    @Transactional
+    public Vote registerVote(Long userId, Long restaurantId, LocalDateTime currentTime) {
         User user = userRepository.getReferenceById(userId);
-        var currentDate = LocalDate.ofInstant(currentTime, ZoneId.systemDefault());
+        var currentDate = LocalDate.from(currentTime);
         Optional<Vote> existingVote = voteRepository.findByUserIdAndMealDate(user.getId(), currentDate);
 
         if (existingVote.isPresent() && !canRevote(currentTime)) {
@@ -75,8 +76,7 @@ public class VoteService {
         return voteRepository.save(vote);
     }
 
-    private boolean canRevote(Instant time) {
-        var currentLocalTime = LocalTime.ofInstant(time, ZoneId.systemDefault());
-        return currentLocalTime.isBefore(VOTING_END_TIME);
+    private boolean canRevote(LocalDateTime currentTime) {
+        return currentTime.toLocalTime().isBefore(VOTING_END_TIME);
     }
 }

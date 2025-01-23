@@ -18,8 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -50,7 +50,7 @@ public class VotesController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new vote for an authenticated user.", description = "A vote is counted for the current day.")
     public VoteResponseDTO create(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody VoteCreateDTO dto) {
-        Vote vote = voteService.registerVote(authUser.getUserId(), dto.restaurantId(), Instant.now());
+        Vote vote = voteService.registerVote(authUser.getUserId(), dto.restaurantId(), LocalDateTime.now());
         return VoteResponseDTO.buildFromEntity(vote);
     }
 }
