@@ -51,7 +51,7 @@ public class VoteService {
         Optional<Vote> existingVote = voteRepository.findByUserIdAndMealDate(user.getId(), currentDate);
 
         if (existingVote.isPresent() && !canRevote(currentTime)) {
-            throw new ApiErrorException(HttpStatus.FORBIDDEN, "It is too late, vote can't be changed");
+            throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY, "It is too late, vote can't be changed");
         }
 
         var restaurant = restaurantRepository.findById(restaurantId)
