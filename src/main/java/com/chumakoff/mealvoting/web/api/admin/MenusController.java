@@ -3,6 +3,7 @@ package com.chumakoff.mealvoting.web.api.admin;
 import com.chumakoff.mealvoting.dto.MenuCreateDTO;
 import com.chumakoff.mealvoting.dto.MenuResponseDTO;
 import com.chumakoff.mealvoting.dto.MenuUpdateDTO;
+import com.chumakoff.mealvoting.dto.MenuWithRestaurantResponseDTO;
 import com.chumakoff.mealvoting.exception.RecordNotFoundException;
 import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.model.Restaurant;
@@ -29,12 +30,12 @@ public class MenusController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new daily lunch menu for a restaurant.")
-    public MenuResponseDTO create(@Valid @RequestBody MenuCreateDTO dto) {
+    public MenuWithRestaurantResponseDTO create(@Valid @RequestBody MenuCreateDTO dto) {
         // TODO exception
         Restaurant restaurant = restaurantRepository.findById(dto.restaurantId())
                 .orElseThrow(() -> new RecordNotFoundException(dto.restaurantId(), Restaurant.class));
         Menu menu = menuRepository.save(new Menu(dto.menuDate(), restaurant, dto.dishes()));
-        return MenuResponseDTO.buildFromEntity(menu);
+        return MenuWithRestaurantResponseDTO.buildFromEntity(menu);
     }
 
     @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

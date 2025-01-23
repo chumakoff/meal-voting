@@ -2,23 +2,22 @@ package com.chumakoff.mealvoting.dto;
 
 import com.chumakoff.mealvoting.model.Dish;
 import com.chumakoff.mealvoting.model.Menu;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public record MenuResponseDTO(
+public record MenuWithRestaurantResponseDTO(
         Long id,
         LocalDate menuDate,
         List<Dish> dishes,
-        @JsonProperty("restaurant_id") Long restaurantId
+        RestaurantResponseDTO restaurant
 ) {
-    public static MenuResponseDTO buildFromEntity(Menu menu) {
-        return new MenuResponseDTO(
+    public static MenuWithRestaurantResponseDTO buildFromEntity(Menu menu) {
+        return new MenuWithRestaurantResponseDTO(
                 menu.getId(),
                 menu.getMenuDate(),
                 menu.getDishes(),
-                menu.getRestaurant().getId()
+                RestaurantResponseDTO.buildFromEntity(menu.getRestaurant())
         );
     }
 }

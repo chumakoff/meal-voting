@@ -1,6 +1,6 @@
 package com.chumakoff.mealvoting.web.api;
 
-import com.chumakoff.mealvoting.dto.MenuResponseDTO;
+import com.chumakoff.mealvoting.dto.MenuWithRestaurantResponseDTO;
 import com.chumakoff.mealvoting.exception.RecordNotFoundException;
 import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.repository.MenuRepository;
@@ -25,7 +25,7 @@ public class MenusController {
     @GetMapping
     @Operation(summary = "Get restaurant daily lunch menus.",
             description = "Menus also include a restaurant information and can be filtered by date.")
-    public List<MenuResponseDTO> list(
+    public List<MenuWithRestaurantResponseDTO> list(
             @RequestParam("date")
             @Nullable
             @Parameter(description = "Filter menus by date")
@@ -39,13 +39,13 @@ public class MenusController {
         } else {
             menus = repository.findAllByMenuDateWithRestaurant(date, sort);
         }
-        return menus.stream().map(MenuResponseDTO::buildFromEntity).toList();
+        return menus.stream().map(MenuWithRestaurantResponseDTO::buildFromEntity).toList();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a lunch menu by ID.")
-    public MenuResponseDTO get(@PathVariable("id") Long id) {
+    public MenuWithRestaurantResponseDTO get(@PathVariable("id") Long id) {
         Menu menu = repository.findByIdWithRestaurant(id).orElseThrow(() -> new RecordNotFoundException(id, Menu.class));
-        return MenuResponseDTO.buildFromEntity(menu);
+        return MenuWithRestaurantResponseDTO.buildFromEntity(menu);
     }
 }

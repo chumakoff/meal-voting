@@ -1,6 +1,6 @@
 package com.chumakoff.mealvoting.web.api;
 
-import com.chumakoff.mealvoting.dto.MenuResponseDTO;
+import com.chumakoff.mealvoting.dto.MenuWithRestaurantResponseDTO;
 import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.repository.MenuRepository;
 import com.chumakoff.mealvoting.testsupport.web.api.ApiControllerTest;
@@ -29,11 +29,11 @@ class MenusControllerTest extends ApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        List<MenuResponseDTO> responseMenus = parseJsonResponseAsList(response, MenuResponseDTO.class);
+        List<MenuWithRestaurantResponseDTO> responseMenus = parseJsonResponseAsList(response, MenuWithRestaurantResponseDTO.class);
         assertFalse(responseMenus.isEmpty());
 
-        List<MenuResponseDTO> allExistingMenus = menuRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
-                .stream().map(MenuResponseDTO::buildFromEntity).toList();
+        List<MenuWithRestaurantResponseDTO> allExistingMenus = menuRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
+                .stream().map(MenuWithRestaurantResponseDTO::buildFromEntity).toList();
         assertIterableEquals(responseMenus, allExistingMenus);
     }
 
@@ -45,12 +45,12 @@ class MenusControllerTest extends ApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        List<MenuResponseDTO> responseMenus = parseJsonResponseAsList(response, MenuResponseDTO.class);
+        List<MenuWithRestaurantResponseDTO> responseMenus = parseJsonResponseAsList(response, MenuWithRestaurantResponseDTO.class);
         assertFalse(responseMenus.isEmpty());
 
         List<Menu> allMenus = menuRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
-        List<MenuResponseDTO> expectedMenus = allMenus.stream().filter(m -> m.getMenuDate().equals(today))
-                .map(MenuResponseDTO::buildFromEntity).toList();
+        List<MenuWithRestaurantResponseDTO> expectedMenus = allMenus.stream().filter(m -> m.getMenuDate().equals(today))
+                .map(MenuWithRestaurantResponseDTO::buildFromEntity).toList();
         assertNotEquals(allMenus.size(), expectedMenus.size());
         assertIterableEquals(responseMenus, expectedMenus);
     }
@@ -63,9 +63,9 @@ class MenusControllerTest extends ApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        MenuResponseDTO responseMenu = parseJsonResponse(response, MenuResponseDTO.class);
+        MenuWithRestaurantResponseDTO responseMenu = parseJsonResponse(response, MenuWithRestaurantResponseDTO.class);
         Menu menu = menuRepository.findById(menuId).orElseThrow();
-        assertEquals(responseMenu, MenuResponseDTO.buildFromEntity(menu));
+        assertEquals(responseMenu, MenuWithRestaurantResponseDTO.buildFromEntity(menu));
     }
 
     @Test

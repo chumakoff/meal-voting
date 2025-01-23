@@ -3,6 +3,7 @@ package com.chumakoff.mealvoting.web.api.admin;
 import com.chumakoff.mealvoting.dto.MenuCreateDTO;
 import com.chumakoff.mealvoting.dto.MenuResponseDTO;
 import com.chumakoff.mealvoting.dto.MenuUpdateDTO;
+import com.chumakoff.mealvoting.dto.MenuWithRestaurantResponseDTO;
 import com.chumakoff.mealvoting.model.Dish;
 import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.repository.MenuRepository;
@@ -35,7 +36,7 @@ class MenusControllerTest extends ApiControllerTest {
     void create() throws Exception {
         ResultActions response = perform(postRequest("/api/admin/menus").content(buildJSON(menuCreateDto)))
                 .andExpect(status().isCreated());
-        MenuResponseDTO responseMenu = parseJsonResponse(response, MenuResponseDTO.class);
+        MenuWithRestaurantResponseDTO responseMenu = parseJsonResponse(response, MenuWithRestaurantResponseDTO.class);
         assertNotNull(responseMenu.id());
         assertEquals(menuCreateDto.menuDate(), responseMenu.menuDate());
         assertEquals(menuCreateDto.dishes(), responseMenu.dishes());
