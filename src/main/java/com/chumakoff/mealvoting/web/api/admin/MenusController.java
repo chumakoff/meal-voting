@@ -4,7 +4,6 @@ import com.chumakoff.mealvoting.dto.MenuCreateDTO;
 import com.chumakoff.mealvoting.dto.MenuResponseDTO;
 import com.chumakoff.mealvoting.dto.MenuUpdateDTO;
 import com.chumakoff.mealvoting.dto.MenuWithRestaurantResponseDTO;
-import com.chumakoff.mealvoting.exception.RecordNotFoundException;
 import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.model.Restaurant;
 import com.chumakoff.mealvoting.repository.MenuRepository;
@@ -17,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import static com.chumakoff.mealvoting.helper.RepositoryHelper.getOrThrow;
 
 @RestController("AdminMenusController")
 @RequestMapping("/api/admin/menus")
@@ -31,9 +32,7 @@ public class MenusController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new daily lunch menu for a restaurant.")
     public MenuWithRestaurantResponseDTO create(@Valid @RequestBody MenuCreateDTO dto) {
-        // TODO exception
-        Restaurant restaurant = restaurantRepository.findById(dto.restaurantId())
-                .orElseThrow(() -> new RecordNotFoundException(dto.restaurantId(), Restaurant.class));
+        Restaurant restaurant = getOrThrow(restaurantRepository.findById(dto.restaurantId()), dto.restaurantId(), Restaurant.class);
         Menu menu = menuRepository.save(new Menu(dto.menuDate(), restaurant, dto.dishes()));
         return MenuWithRestaurantResponseDTO.buildFromEntity(menu);
     }

@@ -1,7 +1,6 @@
 package com.chumakoff.mealvoting.service;
 
 import com.chumakoff.mealvoting.config.exception.ApiErrorException;
-import com.chumakoff.mealvoting.exception.RecordNotFoundException;
 import com.chumakoff.mealvoting.model.Restaurant;
 import com.chumakoff.mealvoting.model.User;
 import com.chumakoff.mealvoting.model.Vote;
@@ -18,6 +17,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+
+import static com.chumakoff.mealvoting.helper.RepositoryHelper.getOrThrow;
 
 @Service
 public class VoteService {
@@ -46,7 +47,7 @@ public class VoteService {
     }
 
     public Vote registerVote(Long userId, Long restaurantId, Instant currentTime) {
-        var user = userRepository.findById(userId).orElseThrow(() -> new RecordNotFoundException(userId, User.class));
+        User user = userRepository.getReferenceById(userId);
         var currentDate = LocalDate.ofInstant(currentTime, ZoneId.systemDefault());
         Optional<Vote> existingVote = voteRepository.findByUserIdAndMealDate(user.getId(), currentDate);
 
@@ -54,8 +55,7 @@ public class VoteService {
             throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY, "It is too late, vote can't be changed");
         }
 
-        var restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new RecordNotFoundException(restaurantId, Restaurant.class));
+        var restaurant = getOrThrow(restaurantRepository.findById(restaurantId), restaurantId, Restaurant.class);
 
         return existingVote.map(vote -> updateVote(vote, restaurant))
                 .orElseGet(() -> createVote(user, restaurant, currentDate));
