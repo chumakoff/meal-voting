@@ -9,7 +9,7 @@ import java.util.List;
 
 public record MenuResponseDTO(
         Long id,
-        LocalDate menuDate,
+        @JsonProperty("menu_date") LocalDate menuDate,
         List<Dish> dishes,
         @JsonProperty("restaurant_id") Long restaurantId
 ) {

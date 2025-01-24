@@ -12,7 +12,7 @@ import java.util.List;
 @UniqueDatePerRestaurant
 public record MenuCreateDTO(
         @NotNull @JsonProperty("restaurant_id") Long restaurantId,
-        @NotNull LocalDate menuDate,
+        @NotNull @JsonProperty("menu_date") @NotNull LocalDate menuDate,
         @NotEmpty List<Dish> dishes
 ) {
 }
