@@ -1,5 +1,6 @@
 package com.chumakoff.mealvoting.config.exception;
 
+import com.chumakoff.mealvoting.exception.ApiErrorException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

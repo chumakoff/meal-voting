@@ -1,4 +1,4 @@
-package com.chumakoff.mealvoting.config.exception;
+package com.chumakoff.mealvoting.exception;
 
 import lombok.Getter;
 import lombok.NonNull;
