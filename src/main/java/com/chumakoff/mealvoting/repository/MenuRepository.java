@@ -24,4 +24,5 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     List<Menu> findAllByMenuDateWithRestaurant(LocalDate date, Sort sort);
 
     boolean existsByMenuDateAndRestaurantId(LocalDate date, Long restaurantId);
+    boolean existsByMenuDateAndRestaurantIdAndIdIsNot(LocalDate date, Long restaurantId, Long id);
 }

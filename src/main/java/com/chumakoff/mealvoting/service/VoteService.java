@@ -1,6 +1,6 @@
 package com.chumakoff.mealvoting.service;
 
-import com.chumakoff.mealvoting.config.exception.ApiErrorException;
+import com.chumakoff.mealvoting.exception.ApiErrorException;
 import com.chumakoff.mealvoting.model.Restaurant;
 import com.chumakoff.mealvoting.model.User;
 import com.chumakoff.mealvoting.model.Vote;

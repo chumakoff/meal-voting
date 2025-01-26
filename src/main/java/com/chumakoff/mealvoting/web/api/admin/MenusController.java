@@ -3,9 +3,7 @@ package com.chumakoff.mealvoting.web.api.admin;
 import com.chumakoff.mealvoting.dto.MenuCreateDTO;
 import com.chumakoff.mealvoting.dto.MenuResponseDTO;
 import com.chumakoff.mealvoting.dto.MenuUpdateDTO;
-import com.chumakoff.mealvoting.dto.MenuWithRestaurantResponseDTO;
 import com.chumakoff.mealvoting.model.Menu;
-import com.chumakoff.mealvoting.model.Restaurant;
 import com.chumakoff.mealvoting.repository.MenuRepository;
 import com.chumakoff.mealvoting.repository.RestaurantRepository;
 import com.chumakoff.mealvoting.service.MenuService;
@@ -16,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import static com.chumakoff.mealvoting.helper.RepositoryHelper.getOrThrow;
 
 @RestController("AdminMenusController")
 @RequestMapping("/api/admin/menus")
@@ -31,10 +27,9 @@ public class MenusController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new daily lunch menu for a restaurant.")
-    public MenuWithRestaurantResponseDTO create(@Valid @RequestBody MenuCreateDTO dto) {
-        Restaurant restaurant = getOrThrow(restaurantRepository.findById(dto.restaurantId()), dto.restaurantId(), Restaurant.class);
-        Menu menu = menuRepository.save(new Menu(dto.menuDate(), restaurant, dto.dishes()));
-        return MenuWithRestaurantResponseDTO.buildFromEntity(menu);
+    public MenuResponseDTO create(@Valid @RequestBody MenuCreateDTO dto) {
+        Menu createdMenu = menuService.create(dto);
+        return MenuResponseDTO.buildFromEntity(createdMenu);
     }
 
     @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -3,13 +3,13 @@ package com.chumakoff.mealvoting.web.api.admin;
 import com.chumakoff.mealvoting.dto.MenuCreateDTO;
 import com.chumakoff.mealvoting.dto.MenuResponseDTO;
 import com.chumakoff.mealvoting.dto.MenuUpdateDTO;
-import com.chumakoff.mealvoting.dto.MenuWithRestaurantResponseDTO;
 import com.chumakoff.mealvoting.model.Dish;
 import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.repository.MenuRepository;
 import com.chumakoff.mealvoting.testsupport.web.api.ApiControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -18,8 +18,7 @@ import java.util.List;
 
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class MenusControllerTest extends ApiControllerTest {
     private final LocalDate today = LocalDate.now();
@@ -36,7 +35,7 @@ class MenusControllerTest extends ApiControllerTest {
     void create() throws Exception {
         ResultActions response = perform(postRequest("/api/admin/menus").content(buildJSON(menuCreateDto)))
                 .andExpect(status().isCreated());
-        MenuWithRestaurantResponseDTO responseMenu = parseJsonResponse(response, MenuWithRestaurantResponseDTO.class);
+        MenuResponseDTO responseMenu = parseJsonResponse(response, MenuResponseDTO.class);
         assertNotNull(responseMenu.id());
         assertEquals(menuCreateDto.menuDate(), responseMenu.menuDate());
         assertEquals(menuCreateDto.dishes(), responseMenu.dishes());
@@ -60,11 +59,21 @@ class MenusControllerTest extends ApiControllerTest {
 
     @Test
     @WithUserDetails(value = AUTH_ADMIN_LOGIN)
-    void create__invalidDate() throws Exception {
+    void create__invalidMenuDate() throws Exception {
         MenuCreateDTO createDto = new MenuCreateDTO(menuCreateDto.restaurantId(), null, menuCreateDto.dishes());
         perform(postRequest("/api/admin/menus").content(buildJSON(createDto)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.message").value("[menuDate] must not be null"));
+    }
+
+    @Test
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
+    void create__duplicateMenuDatePerRestaurant() throws Exception {
+        Menu existingMenu = menuRepository.findById(1L).orElseThrow();
+        MenuCreateDTO createDto = new MenuCreateDTO(existingMenu.getRestaurant().getId(), existingMenu.getMenuDate(), menuCreateDto.dishes());
+        perform(postRequest("/api/admin/menus").content(buildJSON(createDto)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.message").value("A menu item for the given date already exists"));
     }
 
     @Test
@@ -101,7 +110,7 @@ class MenusControllerTest extends ApiControllerTest {
     void update__onlyDishes() throws Exception {
         Long menuId = 1L;
         MenuUpdateDTO updateDto = new MenuUpdateDTO(null, menuUpdateDto.dishes());
-        Menu menuBeforeUpdate = menuRepository.findById(menuId).orElseThrow();
+        LocalDate menuDateBeforeUpdate = menuRepository.findById(menuId).map(Menu::getMenuDate).orElseThrow();
 
         ResultActions response = perform(patchRequest("/api/admin/menus/" + menuId).content(buildJSON(updateDto)))
                 .andExpect(status().isOk());
@@ -109,7 +118,7 @@ class MenusControllerTest extends ApiControllerTest {
 
         assertEquals(menuId, responseMenu.id());
         assertEquals(updateDto.dishes(), responseMenu.dishes());
-        assertEquals(menuBeforeUpdate.getMenuDate(), responseMenu.menuDate());
+        assertEquals(menuDateBeforeUpdate, responseMenu.menuDate());
     }
 
     @Test
@@ -124,6 +133,31 @@ class MenusControllerTest extends ApiControllerTest {
     void update__nonexistent() throws Exception {
         perform(patchRequest("/api/admin/menus/99999").content(buildJSON(menuUpdateDto)))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
+    void update__emptyDishes() throws Exception {
+        Long menuId = 1L;
+        MenuUpdateDTO updateDto = new MenuUpdateDTO(null, List.of());
+        ResultActions response = perform(patchRequest("/api/admin/menus/" + menuId).content(buildJSON(updateDto)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("[dishes] must not be empty"));
+    }
+
+    @Test
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
+    void update__duplicateMenuDate() throws Exception {
+        Long updatedMenuId = 1L;
+        Long anotherMenuId = 2L;
+        LocalDate anotherMenuDate = menuRepository.findById(anotherMenuId).map(Menu::getMenuDate).orElseThrow();
+        MenuUpdateDTO updateDto = new MenuUpdateDTO(anotherMenuDate, null);
+
+        ResultActions response = perform(patchRequest("/api/admin/menus/" + updatedMenuId).content(buildJSON(updateDto)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("A menu item for the given date already exists"));
     }
 
     @Test
