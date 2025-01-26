@@ -19,13 +19,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class RestaurantsControllerTest extends ApiControllerTest {
+    private static final String RESTAURANTS_API_ENDPOINT = "/api/admin/restaurants";
+
     @Autowired
     private RestaurantRepository restaurantRepository;
 
     @Test
     @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void list() throws Exception {
-        ResultActions response = performGetRequest("/api/admin/restaurants")
+        ResultActions response = performGetRequest(RESTAURANTS_API_ENDPOINT)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -37,7 +39,7 @@ class RestaurantsControllerTest extends ApiControllerTest {
     @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void create() throws Exception {
         RestaurantCreateDTO createDto = new RestaurantCreateDTO("Restaurant Name");
-        ResultActions response = perform(postRequest("/api/admin/restaurants").content(buildJSON(createDto)))
+        ResultActions response = perform(postRequest(RESTAURANTS_API_ENDPOINT).content(buildJSON(createDto)))
                 .andExpect(status().isCreated());
         RestaurantResponseDTO responseRestaurant = parseJsonResponse(response, RestaurantResponseDTO.class);
         assertNotNull(responseRestaurant.id());
@@ -50,7 +52,7 @@ class RestaurantsControllerTest extends ApiControllerTest {
         Long restaurantId = 1L;
         RestaurantUpdateDTO updateDto = new RestaurantUpdateDTO("Updated Restaurant Name");
 
-        ResultActions response = perform(patchRequest("/api/admin/restaurants/" + restaurantId).content(buildJSON(updateDto)))
+        ResultActions response = perform(patchRequest(restaurantUrl(restaurantId)).content(buildJSON(updateDto)))
                 .andExpect(status().isOk());
         RestaurantResponseDTO responseRestaurant = parseJsonResponse(response, RestaurantResponseDTO.class);
         assertEquals(restaurantId, responseRestaurant.id());
@@ -63,7 +65,11 @@ class RestaurantsControllerTest extends ApiControllerTest {
         Long restaurantId = 1L;
         assertTrue(restaurantRepository.existsById(restaurantId));
 
-        perform(deleteRequest("/api/admin/restaurants/" + restaurantId)).andExpect(status().isNoContent());
+        perform(deleteRequest(restaurantUrl(restaurantId))).andExpect(status().isNoContent());
         assertFalse(restaurantRepository.existsById(restaurantId));
+    }
+
+    private String restaurantUrl(Long id) {
+        return RESTAURANTS_API_ENDPOINT + "/" + id;
     }
 }

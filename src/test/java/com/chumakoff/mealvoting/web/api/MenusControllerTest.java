@@ -19,13 +19,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class MenusControllerTest extends ApiControllerTest {
+    private static final String MENUS_API_ENDPOINT = "/api/menus";
+
     @Autowired
     private MenuRepository menuRepository;
 
     @Test
     @WithUserDetails(value = AUTH_USER_LOGIN)
     void list() throws Exception {
-        ResultActions response = performGetRequest("/api/menus")
+        ResultActions response = performGetRequest(MENUS_API_ENDPOINT)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -41,7 +43,7 @@ class MenusControllerTest extends ApiControllerTest {
     @WithUserDetails(value = AUTH_USER_LOGIN)
     void list__filterByDate() throws Exception {
         LocalDate today = LocalDate.now();
-        ResultActions response = performGetRequest("/api/menus?date=" + today)
+        ResultActions response = performGetRequest(MENUS_API_ENDPOINT + "?date=" + today)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -59,7 +61,7 @@ class MenusControllerTest extends ApiControllerTest {
     @WithUserDetails(value = AUTH_USER_LOGIN)
     void get() throws Exception {
         Long menuId = 1L;
-        ResultActions response = performGetRequest("/api/menus/" + menuId)
+        ResultActions response = performGetRequest(menuUrl(menuId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -71,10 +73,14 @@ class MenusControllerTest extends ApiControllerTest {
     @Test
     @WithUserDetails(value = AUTH_USER_LOGIN)
     void get__nonexistent() throws Exception {
-        performGetRequest("/api/menus/99999")
+        performGetRequest(menuUrl(99999L))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("Could not find Menu with id=99999"));
+    }
+
+    private String menuUrl(Long id) {
+        return MENUS_API_ENDPOINT + "/" + id;
     }
 }
 

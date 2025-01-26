@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class VotesControllerTest extends ApiControllerTest {
+    private static final String VOTES_API_ENDPOINT = "/api/votes";
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -31,7 +33,7 @@ class VotesControllerTest extends ApiControllerTest {
     @Test
     @WithUserDetails(value = AUTH_USER_LOGIN)
     void list() throws Exception {
-        ResultActions response = performGetRequest("/api/votes")
+        ResultActions response = performGetRequest(VOTES_API_ENDPOINT)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -47,7 +49,7 @@ class VotesControllerTest extends ApiControllerTest {
     @WithUserDetails(value = AUTH_USER_LOGIN)
     void list__filterByDate() throws Exception {
         LocalDate today = LocalDate.now();
-        ResultActions response = performGetRequest("/api/votes?date=" + today)
+        ResultActions response = performGetRequest(VOTES_API_ENDPOINT + "?date=" + today)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -65,7 +67,7 @@ class VotesControllerTest extends ApiControllerTest {
     @WithUserDetails(value = AUTH_USER_LOGIN)
     void list__filterByUserId() throws Exception {
         Long userId = 2L;
-        ResultActions response = performGetRequest("/api/votes?user_id=" + userId)
+        ResultActions response = performGetRequest(VOTES_API_ENDPOINT + "?user_id=" + userId)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -85,7 +87,7 @@ class VotesControllerTest extends ApiControllerTest {
         Long userId = 2L;
         LocalDate today = LocalDate.now();
 
-        ResultActions response = performGetRequest("/api/votes?user_id=" + userId + "&date=" + today)
+        ResultActions response = performGetRequest(VOTES_API_ENDPOINT + "?user_id=" + userId + "&date=" + today)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
@@ -106,7 +108,7 @@ class VotesControllerTest extends ApiControllerTest {
     void create() throws Exception {
         VoteCreateDTO requestDto = new VoteCreateDTO(TEST_RESTAURANT_ID);
 
-        ResultActions response = perform(postRequest("/api/votes").content(buildJSON(requestDto)))
+        ResultActions response = perform(postRequest(VOTES_API_ENDPOINT).content(buildJSON(requestDto)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
@@ -121,7 +123,7 @@ class VotesControllerTest extends ApiControllerTest {
     @WithUserDetails(value = AUTH_USER_LOGIN)
     void create__withNonexistentRestaurant() throws Exception {
         VoteCreateDTO requestDto = new VoteCreateDTO(99999L);
-        perform(postRequest("/api/votes").content(buildJSON(requestDto)))
+        perform(postRequest(VOTES_API_ENDPOINT).content(buildJSON(requestDto)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("Could not find Restaurant with id=99999"));
