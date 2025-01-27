@@ -33,6 +33,25 @@ class MenusControllerTest extends ApiControllerTest {
 
     @Test
     @WithUserDetails(value = AUTH_ADMIN_LOGIN)
+    void get() throws Exception {
+        Long menuId = 1L;
+        ResultActions response = performGetRequest(menuUrl(menuId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        MenuResponseDTO responseMenu = parseJsonResponse(response, MenuResponseDTO.class);
+        Menu menu = menuRepository.findById(menuId).orElseThrow();
+        assertEquals(responseMenu, MenuResponseDTO.buildFromEntity(menu));
+    }
+
+    @Test
+    @WithUserDetails(value = AUTH_USER_LOGIN)
+    void get__unauthorized() throws Exception {
+        performGetRequest(menuUrl(1L)).andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void create() throws Exception {
         ResultActions response = perform(postRequest(MENUS_API_ENDPOINT).content(buildJSON(menuCreateDto)))
                 .andExpect(status().isCreated());

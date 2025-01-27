@@ -5,7 +5,6 @@ import com.chumakoff.mealvoting.dto.MenuResponseDTO;
 import com.chumakoff.mealvoting.dto.MenuUpdateDTO;
 import com.chumakoff.mealvoting.model.Menu;
 import com.chumakoff.mealvoting.repository.MenuRepository;
-import com.chumakoff.mealvoting.repository.RestaurantRepository;
 import com.chumakoff.mealvoting.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import static com.chumakoff.mealvoting.helper.RepositoryHelper.getOrThrow;
+
 @RestController("AdminMenusController")
 @RequestMapping(MenusController.MENUS_API_ENDPOINT)
 @RequiredArgsConstructor
@@ -23,8 +24,14 @@ public class MenusController {
     static final String MENUS_API_ENDPOINT = "/api/admin/menus";
 
     private final MenuRepository menuRepository;
-    private final RestaurantRepository restaurantRepository;
     private final MenuService menuService;
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get a lunch menu by ID.")
+    public MenuResponseDTO get(@PathVariable("id") Long id) {
+        Menu menu = getOrThrow(menuRepository.findByIdWithRestaurant(id), id, Menu.class);
+        return MenuResponseDTO.buildFromEntity(menu);
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
