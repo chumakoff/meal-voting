@@ -16,10 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("AdminMenusController")
-@RequestMapping("/api/admin/menus")
+@RequestMapping(MenusController.MENUS_API_ENDPOINT)
 @RequiredArgsConstructor
 @Tag(name = "[ADMIN] Menus")
 public class MenusController {
+    static final String MENUS_API_ENDPOINT = "/api/admin/menus";
+
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;
     private final MenuService menuService;

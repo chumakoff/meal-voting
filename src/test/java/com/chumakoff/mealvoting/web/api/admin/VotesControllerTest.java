@@ -16,13 +16,12 @@ import java.util.List;
 
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_ADMIN_LOGIN;
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_USER_LOGIN;
+import static com.chumakoff.mealvoting.web.api.admin.VotesController.VOTES_API_ENDPOINT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class VotesControllerTest extends ApiControllerTest {
-    private static final String VOTES_API_ENDPOINT = "/api/admin/votes";
-
     @Autowired
     private VoteRepository voteRepository;
 

@@ -15,12 +15,11 @@ import java.time.LocalDate;
 
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_USER_LOGIN;
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.TEST_RESTAURANT_ID;
+import static com.chumakoff.mealvoting.web.api.VoteController.VOTE_API_ENDPOINT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class VoteControllerTest extends ApiControllerTest {
-    private static final String VOTE_API_ENDPOINT = "/api/vote";
-
     @Autowired
     private UserRepository userRepository;
 

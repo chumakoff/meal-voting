@@ -17,12 +17,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.*;
+import static com.chumakoff.mealvoting.web.api.admin.MenusController.MENUS_API_ENDPOINT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class MenusControllerTest extends ApiControllerTest {
-    private static final String MENUS_API_ENDPOINT = "/api/admin/menus";
-
     private final LocalDate today = LocalDate.now();
     private final MenuCreateDTO menuCreateDto =
             new MenuCreateDTO(TEST_RESTAURANT_ID, today, List.of(new Dish("Foo", 100)));

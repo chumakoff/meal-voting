@@ -18,10 +18,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/votes")
+@RequestMapping(VotesController.VOTES_API_ENDPOINT)
 @RequiredArgsConstructor
 @Tag(name = "[ADMIN] Votes")
 public class VotesController {
+    static final String VOTES_API_ENDPOINT = "/api/admin/votes";
+
     private final VoteService voteService;
 
     @GetMapping

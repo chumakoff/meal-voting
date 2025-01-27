@@ -23,11 +23,15 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static com.chumakoff.mealvoting.web.api.VoteController.VOTE_API_ENDPOINT;
+
 @RestController
-@RequestMapping("/api/vote")
+@RequestMapping(VOTE_API_ENDPOINT)
 @RequiredArgsConstructor
 @Tag(name = "Vote")
 public class VoteController {
+    static final String VOTE_API_ENDPOINT = "/api/vote";
+
     private final VoteService voteService;
     private final VoteRepository repository;
 

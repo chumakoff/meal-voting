@@ -15,12 +15,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_USER_LOGIN;
+import static com.chumakoff.mealvoting.web.api.MenusController.MENUS_API_ENDPOINT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class MenusControllerTest extends ApiControllerTest {
-    private static final String MENUS_API_ENDPOINT = "/api/menus";
-
     @Autowired
     private MenuRepository menuRepository;
 

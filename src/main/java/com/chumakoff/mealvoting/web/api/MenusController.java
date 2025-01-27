@@ -15,12 +15,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.chumakoff.mealvoting.helper.RepositoryHelper.getOrThrow;
+import static com.chumakoff.mealvoting.web.api.MenusController.MENUS_API_ENDPOINT;
 
 @RestController
-@RequestMapping("/api/menus")
+@RequestMapping(MENUS_API_ENDPOINT)
 @RequiredArgsConstructor
 @Tag(name = "Menus")
 public class MenusController {
+    static final String MENUS_API_ENDPOINT = "/api/menus";
+
     private final MenuRepository repository;
 
     @GetMapping

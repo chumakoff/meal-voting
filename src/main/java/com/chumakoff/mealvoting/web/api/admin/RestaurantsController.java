@@ -19,10 +19,12 @@ import java.util.List;
 import static com.chumakoff.mealvoting.helper.RepositoryHelper.getOrThrow;
 
 @RestController
-@RequestMapping("/api/admin/restaurants")
+@RequestMapping(RestaurantsController.RESTAURANTS_API_ENDPOINT)
 @RequiredArgsConstructor
 @Tag(name = "[ADMIN] Restaurants")
 public class RestaurantsController {
+    static final String RESTAURANTS_API_ENDPOINT = "/api/admin/restaurants";
+
     private final RestaurantRepository repository;
 
     @GetMapping
