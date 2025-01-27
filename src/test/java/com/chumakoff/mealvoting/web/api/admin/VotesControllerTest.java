@@ -1,10 +1,7 @@
-package com.chumakoff.mealvoting.web.api;
+package com.chumakoff.mealvoting.web.api.admin;
 
-import com.chumakoff.mealvoting.dto.VoteCreateDTO;
 import com.chumakoff.mealvoting.dto.VoteResponseDTO;
-import com.chumakoff.mealvoting.model.User;
 import com.chumakoff.mealvoting.model.Vote;
-import com.chumakoff.mealvoting.repository.UserRepository;
 import com.chumakoff.mealvoting.repository.VoteRepository;
 import com.chumakoff.mealvoting.testsupport.web.api.ApiControllerTest;
 import org.junit.jupiter.api.Test;
@@ -17,21 +14,20 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_ADMIN_LOGIN;
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_USER_LOGIN;
-import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.TEST_RESTAURANT_ID;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class VotesControllerTest extends ApiControllerTest {
-    private static final String VOTES_API_ENDPOINT = "/api/votes";
+    private static final String VOTES_API_ENDPOINT = "/api/admin/votes";
 
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private VoteRepository voteRepository;
 
     @Test
-    @WithUserDetails(value = AUTH_USER_LOGIN)
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void list() throws Exception {
         ResultActions response = performGetRequest(VOTES_API_ENDPOINT)
                 .andExpect(status().isOk())
@@ -46,7 +42,7 @@ class VotesControllerTest extends ApiControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = AUTH_USER_LOGIN)
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void list__filterByDate() throws Exception {
         LocalDate today = LocalDate.now();
         ResultActions response = performGetRequest(VOTES_API_ENDPOINT + "?date=" + today)
@@ -64,7 +60,7 @@ class VotesControllerTest extends ApiControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = AUTH_USER_LOGIN)
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void list__filterByUserId() throws Exception {
         Long userId = 2L;
         ResultActions response = performGetRequest(VOTES_API_ENDPOINT + "?user_id=" + userId)
@@ -82,7 +78,7 @@ class VotesControllerTest extends ApiControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = AUTH_USER_LOGIN)
+    @WithUserDetails(value = AUTH_ADMIN_LOGIN)
     void list__filterByUserIdAndDate() throws Exception {
         Long userId = 2L;
         LocalDate today = LocalDate.now();
@@ -105,27 +101,7 @@ class VotesControllerTest extends ApiControllerTest {
 
     @Test
     @WithUserDetails(value = AUTH_USER_LOGIN)
-    void create() throws Exception {
-        VoteCreateDTO requestDto = new VoteCreateDTO(TEST_RESTAURANT_ID);
-
-        ResultActions response = perform(postRequest(VOTES_API_ENDPOINT).content(buildJSON(requestDto)))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-
-        VoteResponseDTO responseVote = parseJsonResponse(response, VoteResponseDTO.class);
-        assertNotNull(responseVote.id());
-        assertEquals(responseVote.mealDate(), LocalDate.now());
-        assertEquals(responseVote.restaurantId(), requestDto.restaurantId());
-        assertEquals(responseVote.userId(), userRepository.findByLoginIgnoreCase(AUTH_USER_LOGIN).map(User::getId).orElseThrow());
-    }
-
-    @Test
-    @WithUserDetails(value = AUTH_USER_LOGIN)
-    void create__withNonexistentRestaurant() throws Exception {
-        VoteCreateDTO requestDto = new VoteCreateDTO(99999L);
-        perform(postRequest(VOTES_API_ENDPOINT).content(buildJSON(requestDto)))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("Could not find Restaurant with id=99999"));
+    void list__unauthorized() throws Exception {
+        performGetRequest(VOTES_API_ENDPOINT).andExpect(status().isForbidden());
     }
 }

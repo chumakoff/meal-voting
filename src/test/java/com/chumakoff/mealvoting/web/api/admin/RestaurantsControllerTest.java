@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 
 import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_ADMIN_LOGIN;
+import static com.chumakoff.mealvoting.testsupport.web.api.TestDBData.AUTH_USER_LOGIN;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +34,12 @@ class RestaurantsControllerTest extends ApiControllerTest {
 
         List<RestaurantResponseDTO> responseRestaurants = parseJsonResponseAsList(response, RestaurantResponseDTO.class);
         assertFalse(responseRestaurants.isEmpty());
+    }
+
+    @Test
+    @WithUserDetails(value = AUTH_USER_LOGIN)
+    void list__unauthorized() throws Exception {
+        performGetRequest(RESTAURANTS_API_ENDPOINT).andExpect(status().isForbidden());
     }
 
     @Test

@@ -1,34 +1,28 @@
-package com.chumakoff.mealvoting.web.api;
+package com.chumakoff.mealvoting.web.api.admin;
 
-import com.chumakoff.mealvoting.config.security.AuthUser;
-import com.chumakoff.mealvoting.dto.VoteCreateDTO;
 import com.chumakoff.mealvoting.dto.VoteResponseDTO;
 import com.chumakoff.mealvoting.model.Vote;
-import com.chumakoff.mealvoting.repository.VoteRepository;
 import com.chumakoff.mealvoting.service.VoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Nullable;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/votes")
+@RequestMapping("/api/admin/votes")
 @RequiredArgsConstructor
-@Tag(name = "Votes")
+@Tag(name = "[ADMIN] Votes")
 public class VotesController {
     private final VoteService voteService;
-    private final VoteRepository repository;
 
     @GetMapping
     @Operation(summary = "Get votes.", description = "Votes can be filtered by a date or a user.")
@@ -44,13 +38,5 @@ public class VotesController {
     ) {
         List<Vote> votes = voteService.findAll(date, userId, Sort.by(Sort.Direction.ASC, "id"));
         return votes.stream().map(VoteResponseDTO::buildFromEntity).toList();
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create a new vote for an authenticated user.", description = "A vote is counted for the current day.")
-    public VoteResponseDTO create(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody VoteCreateDTO dto) {
-        Vote vote = voteService.registerVote(authUser.getUserId(), dto.restaurantId(), LocalDateTime.now());
-        return VoteResponseDTO.buildFromEntity(vote);
     }
 }
