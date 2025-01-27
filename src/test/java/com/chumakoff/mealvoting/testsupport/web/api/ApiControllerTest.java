@@ -39,15 +39,15 @@ public abstract class ApiControllerTest {
     }
 
     protected MockHttpServletRequestBuilder postRequest(String url) {
-        return MockMvcRequestBuilders.post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
+        return acceptsAndRespondsWithJSON(MockMvcRequestBuilders.post(url));
     }
 
     protected MockHttpServletRequestBuilder patchRequest(String url) {
-        return MockMvcRequestBuilders.patch(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
+        return acceptsAndRespondsWithJSON(MockMvcRequestBuilders.patch(url));
+    }
+
+    protected MockHttpServletRequestBuilder putRequest(String url) {
+        return acceptsAndRespondsWithJSON(MockMvcRequestBuilders.put(url));
     }
 
     protected MockHttpServletRequestBuilder deleteRequest(String url) {
@@ -68,5 +68,10 @@ public abstract class ApiControllerTest {
 
     private String getResponseJSON(ResultActions result) throws UnsupportedEncodingException {
         return result.andReturn().getResponse().getContentAsString();
+    }
+
+    private MockHttpServletRequestBuilder acceptsAndRespondsWithJSON(MockHttpServletRequestBuilder request) {
+        return request.contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
     }
 }
